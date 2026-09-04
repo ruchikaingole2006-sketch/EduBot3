@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduBot | AI Study Assistant</title>
+
+    <style>
+
+        /* =========================================
+           GOOGLE-LIKE PROFESSIONAL DESIGN
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================================
+           APP LAYOUT
+        ========================================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================= */
+
+        .sidebar {
+            width: 250px;
+            background: #0f172a;
+            color: white;
+            padding: 25px 18px;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 10;
+        }
+
+
+        /* LOGO */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 10px 8px 30px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #06b6d4
+            );
+
+            border-radius: 13px;
+
+            font-size: 23px;
+
+            box-shadow:
+                0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .logo-text h2 {
+            font-size: 20px;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+
+        /* NAVIGATION */
+
+        .nav-title {
+            font-size: 11px;
+            color: #64748b;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            padding: 15px 10px 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            color: #cbd5e1;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #312e81;
+            color: white;
+        }
+
+
+        /* SIDEBAR BOTTOM */
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            background: #1e293b;
+
+            border-radius: 12px;
+
+            padding: 14px;
+
+            font-size: 12px;
+
+            color: #94a3b8;
+        }
+
+        .online {
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            color: #cbd5e1;
+
+            margin-bottom: 5px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+
+            background: #22c55e;
+
+            border-radius: 50%;
+        }
+
+
+        /* =========================================
+           MAIN CONTENT
+        ========================================= */
+
+        .main {
+            margin-left: 250px;
+
+            width: calc(100% - 250px);
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOP BAR
+        ========================================= */
+
+        .topbar {
+            height: 72px;
+
+            background: white;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 5;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            color: #0f172a;
+        }
+
+        .page-title p {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 3px;
+        }
+
+        .top-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            font-size: 13px;
+            color: #475569;
+        }
+
+
+        /* =========================================
+           CONTENT
+        ========================================= */
+
+        .content {
+            padding: 30px 35px;
+
+            max-width: 1300px;
+
+            margin: auto;
+        }
+
+
+        /* =========================================
+           WELCOME BANNER
+        ========================================= */
+
+        .welcome {
+            background: linear-gradient(
+                120deg,
+                #312e81,
+                #4f46e5,
+                #2563eb
+            );
+
+            border-radius: 18px;
+
+            padding: 28px 30px;
+
+            color: white;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 12px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .welcome h2 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #dbeafe;
+            font-size: 14px;
+        }
+
+        .welcome-icon {
+            font-size: 55px;
+            opacity: 0.9;
+        }
+
+
+        /* =========================================
+           DASHBOARD GRID
+        ========================================= */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.7fr)
+                minmax(280px, 1fr);
+
+            gap: 22px;
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 17px;
+
+            box-shadow:
+                0 5px 20px rgba(15, 23, 42, 0.05);
+
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 22px;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+            color: #0f172a;
+        }
+
+        .card-header span {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+
+        /* =========================================
+           CHAT
+        ========================================= */
+
+        .chat-area {
+            height: 420px;
+
+            padding: 20px;
+
+            overflow-y: auto;
+
+            background: #f8fafc;
+        }
+
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+
+        /* MESSAGE */
+
+        .message-row {
+            display: flex;
+
+            gap: 10px;
+
+            margin-bottom: 17px;
+        }
+
+        .message-row.user-row {
+            justify-content: flex-end;
+        }
+
+
+        /* BOT AVATAR */
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+
+            min-width: 34px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #eef2ff;
+
+            font-size: 17px;
+        }
+
+
+        /* BUBBLES */
+
+        .message {
+            max-width: 75%;
+
+            padding: 12px 15px;
+
+            border-radius: 13px;
+
+            font-size: 14px;
+
+            line-height: 1.55;
+
+            white-space: pre-line;
+        }
+
+        .bot-message {
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            color: #334155;
+
+            border-top-left-radius: 4px;
+        }
+
+        .user-message {
+            background: #4f46e5;
+
+            color: white;
+
+            border-top-right-radius: 4px;
+
+            box-shadow:
+                0 5px 12px rgba(79,70,229,0.15);
+        }
+
+
+        /* =========================================
+           QUICK TOPICS
+        ========================================= */
+
+        .quick-section {
+            padding: 17px 20px;
+
+            border-top: 1px solid #e2e8f0;
+
+            background: white;
+        }
+
+        .quick-label {
+            font-size: 11px;
+
+            color: #64748b;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+            margin-bottom: 9px;
+        }
+
+        .quick-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+        }
+
+        .quick-btn {
+            border: 1px solid #dbeafe;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            padding: 7px 11px;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #4f46e5;
+
+            border-color: #4f46e5;
+
+            color: white;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           CHAT INPUT
+        ========================================= */
+
+        .input-area {
+            padding: 15px 20px;
+
+            display: flex;
+
+            gap: 10px;
+
+            border-top: 1px solid #e2e8f0;
+
+            background: white;
+        }
+
+        #messageInput {
+            flex: 1;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            padding: 12px 14px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            color: #334155;
+
+            transition: 0.2s;
+        }
+
+        #messageInput:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        #sendButton {
+            border: none;
+
+            background: #4f46e5;
+
+            color: white;
+
+            padding: 0 20px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        #sendButton:hover {
+            background: #3730a3;
+        }
+
+
+        /* =========================================
+           SUBJECT CARDS
+        ========================================= */
+
+        .subjects {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+
+            padding: 18px;
+        }
+
+        .subject {
+            padding: 15px;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            background: white;
+        }
+
+        .subject:hover {
+            border-color: #818cf8;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 15px rgba(15,23,42,0.06);
+        }
+
+        .subject-icon {
+            font-size: 24px;
+
+            margin-bottom: 8px;
+        }
+
+        .subject h4 {
+            font-size: 13px;
+
+            color: #1e293b;
+        }
+
+        .subject p {
+            font-size: 10px;
+
+            color: #64748b;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================================
+           QUIZ CARD
+        ========================================= */
+
+        .quiz-card {
+            margin-top: 22px;
+        }
+
+        .quiz-content {
+            padding: 22px;
+        }
+
+        .quiz-intro {
+            text-align: center;
+
+            padding: 10px 0 20px;
+        }
+
+        .quiz-icon {
+            width: 60px;
+            height: 60px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: auto auto 12px;
+
+            background: #eef2ff;
+
+            border-radius: 16px;
+
+            font-size: 30px;
+        }
+
+        .quiz-intro h3 {
+            color: #0f172a;
+
+            font-size: 20px;
+
+            margin-bottom: 6px;
+        }
+
+        .quiz-intro p {
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* QUIZ AREA */
+
+        #quizContainer {
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 14px;
+
+            padding: 20px;
+        }
+
+        .progress-container {
+            margin-bottom: 18px;
+        }
+
+        .progress-text {
+            display: flex;
+
+            justify-content: space-between;
+
+            font-size: 11px;
+
+            color: #64748b;
+
+            margin-bottom: 6px;
+        }
+
+        .progress {
+            height: 6px;
+
+            background: #e2e8f0;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+
+            width: 0%;
+
+            background: linear-gradient(
+                90deg,
+                #4f46e5,
+                #06b6d4
+            );
+
+            transition: 0.3s;
+        }
+
+        #question {
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #0f172a;
+
+            margin-bottom: 15px;
+        }
+
+        .option {
+            display: block;
+
+            width: 100%;
+
+            text-align: left;
+
+            padding: 12px 14px;
+
+            margin: 8px 0;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: #334155;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            border-color: #6366f1;
+
+            background: #eef2ff;
+        }
+
+        .option:disabled {
+            cursor: default;
+        }
+
+        .correct {
+            background: #dcfce7 !important;
+
+            border-color: #22c55e !important;
+
+            color: #166534 !important;
+        }
+
+        .wrong {
+            background: #fee2e2 !important;
+
+            border-color: #ef4444 !important;
+
+            color: #991b1b !important;
+        }
+
+
+        /* QUIZ BUTTONS */
+
+        .primary-btn {
+            display: block;
+
+            margin: 15px auto 0;
+
+            padding: 11px 22px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .primary-btn:hover {
+            background: #3730a3;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* RESULT */
+
+        #result {
+            text-align: center;
+
+            padding: 12px;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            color: #4f46e5;
+        }
+
+
+        /* =========================================
+           HIDDEN
+        ========================================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 18px 10px;
+            }
+
+            .logo-text,
+            .nav-title,
+            .nav-item span,
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+
+                width: calc(100% - 70px);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 20px 14px;
+            }
+
+            .welcome {
+                padding: 22px;
+
+                border-radius: 15px;
+            }
+
+            .welcome h2 {
+                font-size: 20px;
+            }
+
+            .welcome-icon {
+                display: none;
+            }
+
+            .chat-area {
+                height: 350px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            #sendButton {
+                height: 44px;
+            }
+
+            .subjects {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🤖
+            </div>
+
+            <div class="logo-text">
+
+                <h2>EduBot</h2>
+
+                <span>AI Study Assistant</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-title">
+            MENU
+        </div>
+
+
+        <div
+            class="nav-item active"
+            onclick="scrollToTop()">
+
+            🏠
+            <span>Dashboard</span>
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="focusChat()">
+
+            💬
+            <span>AI Chat</span>
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scrollToQuiz()">
+
+            📝
+            <span>Quiz</span>
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="scrollToSubjects()">
+
+            📚
+            <span>Subjects</span>
+
+        </div>
+
+
+        <div class="nav-title">
+            INFORMATION
+        </div>
+
+
+        <div class="nav-item">
+
+            ℹ️
+            <span>About EduBot</span>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="online">
+
+                <span class="online-dot"></span>
+
+                EduBot Online
+
+            </div>
+
+            Ask questions and learn smarter.
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>Student Dashboard</h1>
+
+                <p>Learn • Practice • Improve</p>
+
+            </div>
+
+
+            <div class="top-status">
+
+                <span class="online-dot"></span>
+
+                AI Assistant Ready
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <h2>
+                        Welcome to EduBot 👋
+                    </h2>
+
+                    <p>
+                        Your intelligent study companion
+                        for learning and exam preparation.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    🎓
+                </div>
+
+            </div>
+
+
+
+            <!-- DASHBOARD GRID -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- =================================
+                     CHAT CARD
+                ================================== -->
+
+                <div
+                    class="card"
+                    id="chatCard">
+
+
+                    <div class="card-header">
+
+                        <h3>
+                            💬 AI Study Assistant
+                        </h3>
+
+                        <span>
+                            Ask anything
+                        </span>
+
+                    </div>
+
+
+                    <!-- CHAT AREA -->
+
+                    <div
+                        id="chatArea"
+                        class="chat-area">
+
+
+                        <div class="message-row">
+
+
+                            <div class="avatar">
+                                🤖
+                            </div>
+
+
+                            <div
+                                class="message bot-message">
+
+                                Hello! 👋<br><br>
+
+                                I'm <strong>EduBot</strong>,
+                                your AI Study Assistant.
+
+                                <br><br>
+
+                                Ask me about
+                                <strong>AI, Python,
+                                Computer Science,
+                                Data Science</strong>
+                                or study tips.
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- QUICK TOPICS -->
+
+                    <div class="quick-section">
+
+                        <div class="quick-label">
+                            Quick Topics
+                        </div>
+
+
+                        <div class="quick-buttons">
+
+
+                            <button
+                                class="quick-btn"
+                                onclick="sendQuickMessage('Python')">
+
+                                🐍 Python
+
+                            </button>
+
+
+                            <button
+                                class="quick-btn"
+                                onclick="sendQuickMessage('AI')">
+
+                                🤖 AI
+
+                            </button>
+
+
+                            <button
+                                class="quick-btn"
+                                onclick="sendQuickMessage('Computer Science')">
+
+                                💻 Computer Science
+
+                            </button>
+
+
+                            <button
+                                class="quick-btn"
+                                onclick="sendQuickMessage('Data Science')">
+
+                                📊 Data Science
+
+                            </button>
+
+
+                            <button
+                                class="quick-btn"
+                                onclick="sendQuickMessage('Study Tips')">
+
+                                📚 Study Tips
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INPUT -->
+
+                    <div class="input-area">
+
+
+                        <input
+                            type="text"
+                            id="messageInput"
+                            placeholder="Ask EduBot a question...">
+
+
+                        <button
+                            id="sendButton"
+                            onclick="sendMessage()">
+
+                            Send ➤
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================
+                     SUBJECTS CARD
+                ================================== -->
+
+                <div
+                    class="card"
+                    id="subjects">
+
+
+                    <div class="card-header">
+
+                        <h3>
+                            📚 Study Subjects
+                        </h3>
+
+                        <span>
+                            Explore
+                        </span>
+
+                    </div>
+
+
+                    <div class="subjects">
+
+
+                        <div
+                            class="subject"
+                            onclick="sendQuickMessage('Python')">
+
+                            <div class="subject-icon">
+                                🐍
+                            </div>
+
+                            <h4>Python</h4>
+
+                            <p>Programming Basics</p>
+
+                        </div>
+
+
+                        <div
+                            class="subject"
+                            onclick="sendQuickMessage('AI')">
+
+                            <div class="subject-icon">
+                                🤖
+                            </div>
+
+                            <h4>Artificial Intelligence</h4>
+
+                            <p>AI Fundamentals</p>
+
+                        </div>
+
+
+                        <div
+                            class="subject"
+                            onclick="sendQuickMessage('Computer Science')">
+
+                            <div class="subject-icon">
+                                💻
+                            </div>
+
+                            <h4>Computer Science</h4>
+
+                            <p>Core Concepts</p>
+
+                        </div>
+
+
+                        <div
+                            class="subject"
+                            onclick="sendQuickMessage('Data Science')">
+
+                            <div class="subject-icon">
+                                📊
+                            </div>
+
+                            <h4>Data Science</h4>
+
+                            <p>Data & Analytics</p>
+
+                        </div>
+
+
+                        <div
+                            class="subject"
+                            onclick="sendQuickMessage('Study Tips')">
+
+                            <div class="subject-icon">
+                                📚
+                            </div>
+
+                            <h4>Study Tips</h4>
+
+                            <p>Exam Preparation</p>
+
+                        </div>
+
+
+                        <div
+                            class="subject"
+                            onclick="scrollToQuiz()">
+
+                            <div class="subject-icon">
+                                📝
+                            </div>
+
+                            <h4>Quiz</h4>
+
+                            <p>Test Knowledge</p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 QUIZ
+            ================================== -->
+
+            <div
+                class="card quiz-card"
+                id="quizSection">
+
+
+                <div class="card-header">
+
+                    <h3>
+                        📝 Knowledge Quiz
+                    </h3>
+
+                    <span>
+                        Test yourself
+                    </span>
+
+                </div>
+
+
+                <div class="quiz-content">
+
+
+                    <!-- QUIZ INTRO -->
+
+                    <div
+                        id="quizIntro"
+                        class="quiz-intro">
+
+
+                        <div class="quiz-icon">
+                            🧠
+                        </div>
+
+
+                        <h3>
+                            Ready to test your knowledge?
+                        </h3>
+
+
+                        <p>
+                            Answer 5 questions and
+                            see your score instantly.
+                        </p>
+
+
+                        <button
+                            id="startQuizButton"
+                            class="primary-btn"
+                            onclick="startQuiz()">
+
+                            Start Quiz 🚀
+
+                        </button>
+
+
+                    </div>
+
+
+
+                    <!-- QUIZ -->
+
+                    <div
+                        id="quizContainer"
+                        class="hidden">
+
+
+                        <div class="progress-container">
+
+
+                            <div class="progress-text">
+
+                                <span id="progressText">
+                                    Question 1 of 5
+                                </span>
+
+                                <span id="scoreText">
+                                    Score: 0
+                                </span>
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <div
+                                    id="progressBar"
+                                    class="progress-bar">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div id="question"></div>
+
+
+                        <div id="options"></div>
+
+
+                        <button
+                            id="nextButton"
+                            class="primary-btn hidden"
+                            onclick="nextQuestion()">
+
+                            Next Question →
+
+                        </button>
+
+
+                        <div id="result"></div>
+
+
+                        <button
+                            id="restartButton"
+                            class="primary-btn hidden"
+                            onclick="startQuiz()">
+
+                            🔄 Restart Quiz
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="footer">
+
+                EduBot AI Study Assistant •
+                Designed for Students 🎓
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================
+   CHATBOT
+========================================= */
+
+
+async function sendMessage() {
+
+
+    const input =
+        document.getElementById("messageInput");
+
+
+    const message =
+        input.value.trim();
+
+
+    if (message === "") {
+
+        return;
+
+    }
+
+
+    addMessage(
+        message,
+        "user"
+    );
+
+
+    input.value = "";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/chat",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        addMessage(
+            data.reply,
+            "bot"
+        );
+
+
+    }
+
+
+    catch (error) {
+
+
+        addMessage(
+            "Sorry! Something went wrong. Please try again.",
+            "bot"
+        );
+
+
+    }
+
+}
+
+
+
+/* =========================================
+   ADD MESSAGE
+========================================= */
+
+
+function addMessage(
+    message,
+    sender
+) {
+
+
+    const chatArea =
+        document.getElementById(
+            "chatArea"
+        );
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.classList.add(
+        "message-row"
+    );
+
+
+    if (sender === "user") {
+
+        row.classList.add(
+            "user-row"
+        );
+
+    }
+
+
+    const avatar =
+        document.createElement(
+            "div"
+        );
+
+
+    avatar.classList.add(
+        "avatar"
+    );
+
+
+    avatar.textContent =
+        sender === "bot"
+            ? "🤖"
+            : "👤";
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+
+    bubble.classList.add(
+        "message"
+    );
+
+
+    if (sender === "bot") {
+
+        bubble.classList.add(
+            "bot-message"
+        );
+
+    } else {
+
+        bubble.classList.add(
+            "user-message"
+        );
+
+    }
+
+
+    bubble.textContent =
+        message;
+
+
+    if (sender === "user") {
+
+        row.appendChild(
+            bubble
+        );
+
+        row.appendChild(
+            avatar
+        );
+
+    } else {
+
+        row.appendChild(
+            avatar
+        );
+
+        row.appendChild(
+            bubble
+        );
+
+    }
+
+
+    chatArea.appendChild(
+        row
+    );
+
+
+    chatArea.scrollTop =
+        chatArea.scrollHeight;
+
+}
+
+
+
+/* =========================================
+   QUICK MESSAGE
+========================================= */
+
+
+function sendQuickMessage(
+    message
+) {
+
+
+    document.getElementById(
+        "messageInput"
+    ).value = message;
+
+
+    focusChat();
+
+
+    sendMessage();
+
+}
+
+
+
+/* =========================================
+   ENTER KEY
+========================================= */
+
+
+document.getElementById(
+    "messageInput"
+).addEventListener(
+    "keydown",
+    function(event) {
+
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+
+/* =========================================
+   QUIZ VARIABLES
+========================================= */
+
+
+let quizQuestions = [];
+
+let currentQuestion = 0;
+
+let score = 0;
+
+
+
+/* =========================================
+   START QUIZ
+========================================= */
+
+
+async function startQuiz() {
+
+
+    try {
+
+
+        const response =
+            await fetch("/quiz");
+
+
+        quizQuestions =
+            await response.json();
+
+
+        currentQuestion = 0;
+
+        score = 0;
+
+
+        document.getElementById(
+            "quizIntro"
+        ).classList.add(
+            "hidden"
+        );
+
+
+        document.getElementById(
+            "quizContainer"
+        ).classList.remove(
+            "hidden"
+        );
+
+
+        document.getElementById(
+            "restartButton"
+        ).classList.add(
+            "hidden"
+        );
+
+
+        document.getElementById(
+            "result"
+        ).textContent = "";
+
+
+        showQuestion();
+
+
+    }
+
+
+    catch (error) {
+
+
+        alert(
+            "Unable to load quiz. Please try again."
+        );
+
+
+    }
+
+}
+
+
+
+/* =========================================
+   SHOW QUESTION
+========================================= */
+
+
+function showQuestion() {
+
+
+    const questionData =
+        quizQuestions[
+            currentQuestion
+        ];
+
+
+    document.getElementById(
+        "question"
+    ).textContent =
+
+        questionData.question;
+
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+
+        "Question " +
+        (currentQuestion + 1) +
+        " of " +
+        quizQuestions.length;
+
+
+    document.getElementById(
+        "scoreText"
+    ).textContent =
+
+        "Score: " +
+        score;
+
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+
+        (
+            (
+                currentQuestion
+                /
+                quizQuestions.length
+            ) * 100
+        ) + "%";
+
+
+    const options =
+        document.getElementById(
+            "options"
+        );
+
+
+    options.innerHTML = "";
+
+
+    questionData.options.forEach(
+        function(option) {
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.textContent =
+                option;
+
+
+            button.classList.add(
+                "option"
+            );
+
+
+            button.onclick =
+                function() {
+
+                    checkAnswer(
+                        button,
+                        option
+                    );
+
+                };
+
+
+            options.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    document.getElementById(
+        "nextButton"
+    ).classList.add(
+        "hidden"
+    );
+
+}
+
+
+
+/* =========================================
+   CHECK ANSWER
+========================================= */
+
+
+function checkAnswer(
+    button,
+    selectedOption
+) {
+
+
+    const correctAnswer =
+        quizQuestions[
+            currentQuestion
+        ].answer;
+
+
+    const selectedAnswer =
+        selectedOption.charAt(0);
+
+
+    const allOptions =
+        document.querySelectorAll(
+            ".option"
+        );
+
+
+    allOptions.forEach(
+        function(option) {
+
+            option.disabled = true;
+
+        }
+    );
+
+
+    if (
+        selectedAnswer ===
+        correctAnswer
+    ) {
+
+
+        button.classList.add(
+            "correct"
+        );
+
+
+        score++;
+
+
+    }
+
+
+    else {
+
+
+        button.classList.add(
+            "wrong"
+        );
+
+
+        allOptions.forEach(
+            function(option) {
+
+
+                if (
+                    option.textContent.charAt(0)
+                    ===
+                    correctAnswer
+                ) {
+
+                    option.classList.add(
+                        "correct"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    document.getElementById(
+        "scoreText"
+    ).textContent =
+
+        "Score: " +
+        score;
+
+
+    document.getElementById(
+        "nextButton"
+    ).classList.remove(
+        "hidden"
+    );
+
+}
+
+
+
+/* =========================================
+   NEXT QUESTION
+========================================= */
+
+
+function nextQuestion() {
+
+
+    currentQuestion++;
+
+
+    if (
+        currentQuestion <
+        quizQuestions.length
+    ) {
+
+
+        showQuestion();
+
+
+    }
+
+
+    else {
+
+
+        showResult();
+
+
+    }
+
+}
+
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+
+function showResult() {
+
+
+    document.getElementById(
+        "question"
+    ).textContent =
+
+        "🎉 Quiz Completed!";
+
+
+    document.getElementById(
+        "options"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "nextButton"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "progressBar"
+    ).style.width = "100%";
+
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+
+        "Completed";
+
+
+    document.getElementById(
+        "result"
+    ).textContent =
+
+        "🏆 Your Score: " +
+        score +
+        " / " +
+        quizQuestions.length;
+
+
+    document.getElementById(
+        "restartButton"
+    ).classList.remove(
+        "hidden"
+    );
+
+}
+
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+
+function scrollToQuiz() {
+
+
+    document.getElementById(
+        "quizSection"
+    ).scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+
+function scrollToSubjects() {
+
+
+    document.getElementById(
+        "subjects"
+    ).scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+
+function focusChat() {
+
+
+    document.getElementById(
+        "chatCard"
+    ).scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+
+    setTimeout(
+        function() {
+
+            document.getElementById(
+                "messageInput"
+            ).focus();
+
+        },
+        500
+    );
+
+}
+
+
+
+function scrollToTop() {
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>
